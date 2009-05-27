@@ -1,0 +1,141 @@
+#! /usr/bin/env ruby -Ke
+WDCNT_VERSION = "2000-01-23"
+
+=begin
+= wdcnt -- word counter for English/Japanese text file. 
+
+== SYNOPSIS
+
+((%wdcnt [-r] [-p|-z] [-e] ((|files|)) ...%))
+
+((%wdcnt [-r] [-p|-z] [-e] < ((|file|))%))
+
+((%wdcnt -v%))
+
+== DESCRIPTION
+
+(('wdcnt')) counts reports English or Japanese words in files or
+standard input. (('wdcnt')) ignores punctuation, digits, quote signs
+or HTML tags.  The output is sorted in the order of the occurrence
+frequency and can be plotted directly by (('gnuplot(1)')) as follows.
+
+  gnuplot> set log xy
+  gnuplot> plot "< wdcnt file"
+
+== OPTIONS
+
+: -p 
+  Reports probability instead of number of occurrences. 
+  Each frequency is normalized by 1.0. 
+
+: -z
+  Reports relative frequency instead of number of occurrences. 
+  1.0 for the most occurring word. 
+
+: -r
+  Puts rank to the head of each line. 
+
+: -e
+  Does not use KAKASI.  This option is NOT useful to Japanese documents.
+
+: -v, -h
+  Prints usage and version then exit. 
+
+== HISTORY
+
+For English document, a traditional one-liner is known: 
+
+  % tr -s '\040' '\012' files ... | sort -n | uniq -c | sort -n -r
+
+== SEE ALSO
+
+(('Ruby/KAKASI')) ((<URL:http://www.ruby-lang.org/en/raa.html#Ruby%2FKAKASI>)),
+(('ruby(1)')) ((<URL:http://www.ruby-lang.org/>)), 
+(('kakasi(1)')) ((<URL:http://kakasi.namazu.org/>)), 
+(('gnuplot(1)')), (('tr(1)')), (('sort(1)')), (('uniq(1)'))
+
+== BUGS
+
+Word separation is not accurate. 
+
+== AUTHOR
+
+Gotoken ((<URL:mailto:gotoken@notwork.org>))
+
+=end
+require "getopts"
+getopts("epzvhr")
+ME = File.basename($0)
+
+if $OPT_v || $OPT_h || ($OPT_p && $OPT_z)
+  puts "#{ME} - version #{WDCNT_VERSION}"
+  puts <<EOS
+USAGE:
+  #{ME} [-r] [-p|-z] [-e] files ...
+  #{ME} [-r] [-p|-z] [-e] < file
+  #{ME} -v
+OPTIONS:
+  -p: reports as probability.
+  -z: reports relative frequency (1.0 for most word).
+  -e: does not use KAKASI.
+  -v: prints this message. 
+EOS
+  exit
+end
+
+if $OPT_e
+  def kakasi(opt, src); src end
+else
+  require "kakasi"
+  include Kakasi
+end
+
+files = ARGV.dup
+
+# delete html-tag or symbol
+txt = kakasi("-oeuc -Ea", $<.read || "")
+txt.gsub!(/<[^>]*>/p, " ")
+txt.gsub!(/^\.\S+\s+/, "")
+txt.gsub!(/[\/<>\s\n\r\d%\(\),:;~"`]+/p, " ") # "
+txt.gsub!(/(?!\w)[-'\.]\W/, " ") # '
+words = kakasi("-ieuc -w", txt).split.sort!
+
+n = 0.0
+w0, c, wc = words.shift, 1, []
+w0 or (STDERR.puts "#{ME}: nodata??"; exit)
+
+# counting words
+words.each{|w|
+  if w != w0
+    wc.push [c,w0]
+    n += c
+    c = 1
+  else
+    c += 1
+  end
+  w0 = w
+}
+wc.push [c, w0]
+n += c
+
+# report
+puts "# creator: #{ME} - version #{WDCNT_VERSION}"
+puts "# date   : #{Time.now}"
+puts "# source : #{files.join(',')}"
+puts "# comment: KAKASI was not used." if $OPT_e
+puts "# summary: #{wc.size} different words in #{n.to_i} words."
+
+wc.sort!.reverse!.each_with_index{|d,i| 
+  fmt, data = if $OPT_r
+		["%5d ", [i+1]]
+	      else
+		["", []]
+	      end
+  if $OPT_p
+    puts "#{fmt}%.5f # %s" % (data + [d[0]/n, d[1]])
+  elsif $OPT_z
+    puts "#{fmt}%.5f # %s" % (data + [d[0]/wc[0][0].to_f, d[1]])
+  else
+    puts "#{fmt}%4d # %s" % (data + d)
+  end
+}

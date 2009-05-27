@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><TITLE>wdcnt</TITLE>
+</HEAD>
+<BODY>
+<H1><A NAME="label:0">wdcnt -- word counter for English/Japanese text file.</A></H1>
+<H2><A NAME="label:1">SYNOPSIS</A></H2>
+<P>
+<KBD>wdcnt [-p|-z] [-e] <VAR>files</VAR> ...</KBD>
+</P>
+<P>
+<KBD>wdcnt [-p|-z] [-e] &lt; <VAR>file</VAR></KBD>
+</P>
+<P>
+<KBD>wdcnt -v</KBD>
+</P>
+<H2><A NAME="label:2">DESCRIPTION</A></H2>
+<P>
+<VERB>wdcnt</VERB> counts reports English or Japanese words in files or
+standard input. <VERB>wdcnt</VERB> ignores punctuation, digits, quote signs
+or HTML tags.  The output is sorted in the order of the occurrence
+frequency and can be plotted directly by <VERB>gnuplot(1)</VERB> as follows.
+</P>
+<BLOCKQUOTE><PRE>
+gnuplot&gt; set log xy
+gnuplot&gt; plot "&lt; wdcnt file"
+
+</PRE></BLOCKQUOTE>
+<H2><A NAME="label:3">OPTIONS</A></H2>
+<DL>
+<DT><A NAME="label:8">-p</A>
+<DD>
+<P>
+Reports probability instead of number of occurrences. 
+Each frequency is normalized by 1.0. 
+</P>
+</DD>
+<DT><A NAME="label:9">-z</A>
+<DD>
+<P>
+Reports relative frequency instead of number of occurrences. 
+1.0 for the most occurring word. 
+</P>
+</DD>
+<DT><A NAME="label:10">-e</A>
+<DD>
+<P>
+Does not use KAKASI.  This option is NOT useful to Japanese documents.
+</P>
+</DD>
+<DT><A NAME="label:11">-v, -h</A>
+<DD>
+<P>
+Prints usage and version then exit. 
+</P>
+</DD>
+</DL>
+<H2><A NAME="label:4">HISTORY</A></H2>
+<P>
+For English document, a traditional one-liner is known: 
+</P>
+<BLOCKQUOTE><PRE>
+% tr -s '\040' '\012' files ... | sort -n | uniq -c | sort -n -r
+
+</PRE></BLOCKQUOTE>
+<H2><A NAME="label:5">SEE ALSO</A></H2>
+<P>
+<VERB>Ruby/KAKASI</VERB> <A HREF="http://www.ruby-lang.org/en/raa.html#Ruby%2FKAKASI">&lt;URL:http://www.ruby-lang.org/en/raa.html#Ruby%2FKAKASI&gt;</A>,
+<VERB>ruby(1)</VERB> <A HREF="http://www.ruby-lang.org/">&lt;URL:http://www.ruby-lang.org/&gt;</A>, 
+<VERB>kakasi(1)</VERB> <A HREF="http://kakasi.namazu.org/">&lt;URL:http://kakasi.namazu.org/&gt;</A>, 
+<VERB>gnuplot(1)</VERB>, <VERB>tr(1)</VERB>, <VERB>sort(1)</VERB>, <VERB>uniq(1)</VERB>
+</P>
+<H2><A NAME="label:6">BUGS</A></H2>
+<P>
+Word separation is not accurate. 
+</P>
+<H2><A NAME="label:7">AUTHOR</A></H2>
+<P>
+Gotoken <A HREF="mailto:gotoken@notwork.org">&lt;URL:mailto:gotoken@notwork.org&gt;</A>
+</P>
+
+</BODY>
+</HTML>

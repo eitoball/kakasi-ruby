@@ -1,0 +1,118 @@
+$kNotwork: README,v 1.2 2002/09/28 05:21:05 gotoken Exp $
+
+Ruby/KAKASI extension module
+
+                                              by Gotoken (23 Jan 2000)
+
+0. Note
+
+This document includes Japanese characters (encoded in euc-japan).
+
+
+1. Introduction
+
+This extension module is a Ruby binding of ``KAKASI'', which is
+developed by Hironobu Takahashi.  KAKASI is the language processing
+filter to convert Kanji characters to Hiragana, Katakana or Romaji
+and may be helpful to read Japanese documents.
+
+The most entries of the kakasi dictionary is derived form the SKK
+dictionaries(KaKaSi is opposite of SKK). KAKASI can handle many other
+format of dictionaries. See doc/JISYO file which is included in the
+source archive of KAKASI for more detail.
+
+
+2. Usage
+
+This extension module provides a module Kakasi which has a module
+function kakasi only.
+
+2.1 Example
+
+  require "kakasi"
+  include Kakasi
+
+  puts kakasi("-Ja -Ha -s", "案山子なのです") #=> "kakasi nanodesu"
+
+2.2 Arguments
+
+1st argument is a option string for KAKASI.  See KAKASI's manual page
+for the detail. 
+
+2nd argument is a target string.  If a non string argument is given
+kakasi raise an exception.
+
+To be faster, Kakasi::kakasi initializes KAKASI only if the 1st
+argument is different from the previous one.
+
+
+3. Installation
+
+3.1 Install libkakasi.a
+
+Get the latest KAKASI from <URL:ftp://kakasi.namazu.org/pub/kakasi/>. 
+KAKASI's tarball is named like as kakasi-2.x.y.tar.gz (x.y stands for 
+minor version). Expand it and a directory kakasi-2.x.y is obtained. 
+Typically, you can install as follows:
+
+cd kakasi-2.x.y
+./configure
+make
+(Be a super user if you need now)
+make install
+
+3.2 Install the extension module
+
+Edit extconf.rb if cpp or ld can't find libkakasi.h or libkakasi.a. 
+Then
+
+ruby extconf.rb
+make
+(Be a super user if you need now)
+make install
+
+4. Copying
+
+4.1 Copyright
+
+(C) Copyright 1999-2002 GOTO Kentaro 
+Ruby/KAKASI extension module is a copyrighted free software by GOTO
+Kentaro.
+
+4.2 Redistributing and Using
+
+You may use or redistribute Ruby/KAKASI under the terms specified in
+the COPYING file of the Ruby distribution.
+
+Furthermore, Ruby/KAKASI is a ``Nokoware''. That is, I don't compel
+but hope you would listen TANIYAMA Hiroko's songs.  She is a Japanese
+singer.  Visit her homepage <URL:http://taniyama.hiroko.com/>.
+
+4.3 Redistributing the binary
+
+KAKASI is distributed under GNU Public License, so be careful when you
+would redistribute compiled matters. 
+
+
+5. Feedback
+
+Comments, or bug reports are welcome: <URL:mailto:gotoken@notwork.org>
+
+
+6. Acknowledgments
+
+The auther thanks to Masahiko Sato who develops SKK, Hironobu
+Takahashi who is the author of KAKASI, Hajime BABA who contributed
+Wakatigaki patch and NOKUBI Takatsugu who created libkakasi.  If they
+didn't create such great softwares, he couldn't write this extension.
+Masato Shiotani contributed immediately a hard disk when my disk was
+full.  And, he would also like to express his gratitude to Matz who is
+the auther of Ruby, and all Rubyists for the helpful discussions.
+
+
+7. Superfluous
+
+http://kakasi.namazu.org says ``SKK - simple kana kanji converter''.
+In the combinator theory, there is a famous equation `SKK == I', where
+`I' stands for an identical combinator. So I think the name of SKK is
+a deep joke, maybe :-)

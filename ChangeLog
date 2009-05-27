@@ -1,0 +1,33 @@
+Sun Jan 23 18:49:43 JST 2000  GOTO Kentaro <gotoken@notwork.org>
+
+	* README: English documentation.
+
+	* kakasi.c: constant KAKASI_VERSION is featured. 
+
+Fri Dec 03 02:30:41 JST 1999  akira yamada <akira@arika.org>
+
+	* kakasi.c: allows string which includes '\0'. 
+
+Fri Dec 03 02:30:41 JST 1999  Shugo Maeda <shugo@netlab.co.jp>
+
+	* kakasi.c: append '\0' to opt_str. 
+
+Mon Nov 29 19:52:03 JST 1999  Kazunori NISHI <kazunori@swlab.csce.kyushu-u.ac.jp>
+
+	* kakasi.c: return "" immediately if source str is empty.
+
+Mon Nov 29 19:50:19 JST 1999  GOTO Kentaro <gotoken@notwork.org>
+
+	* README.jp: was revised for kakasi-2.3.x.
+
+Fri Jul 30 17:05:34 JST 1999  GOTO Kentaro <gotoken@notwork.org>
+
+	* README.jp was revised.
+
+Wed Jul 28 17:07:26 JST 1999  GOTO Kentaro <gotoken@notwork.org>
+
+	* Check_Type for the options. 
+
+Wed Jul 28 16:00:00 JST 1999  GOTO Kentaro <gotoken@notwork.org>
+
+	* the first release. 
