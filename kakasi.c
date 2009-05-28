@@ -5,7 +5,6 @@
 
 #include <string.h>
 #include "ruby.h"
-#include "ruby/encoding.h"
 #include "libkakasi.h"
 
 #define OPTMAX 1024
@@ -17,15 +16,6 @@ static char const rcsid[] =
 static int dic_closed = 1, len = 0;
 static char prev_opt_ptr[OPTMAX];
 
-static VALUE
-new_euc_string(const char *ptr)
-{
-    if (!ptr) {
-	rb_raise(rb_eArgError, "NULL pointer given");
-    }
-
-    return rb_enc_str_new(ptr, strlen(ptr), rb_enc_find("EUC-JP"));
-}
 static VALUE
 rb_kakasi_kakasi(obj, opt, src)
     VALUE obj, opt, src;
@@ -39,7 +29,7 @@ rb_kakasi_kakasi(obj, opt, src)
 
     /* return "" immediately if source str is empty */
     if (RSTRING_LEN(src) == 0)
-	return new_euc_string("");
+	return rb_str_new2("");
 
     Check_Type(opt, T_STRING);
 
@@ -61,8 +51,6 @@ rb_kakasi_kakasi(obj, opt, src)
 	argv = opts = ALLOCA_N(char*, RSTRING_LEN(opt));
 	*opts++ = "kakasi";
 	argc++;
-	*opts++ = "-oeuc";
-	argc++;
 
 	opt_ptr = ALLOCA_N(char, 1 + RSTRING_LEN(opt));
 	strncpy(opt_ptr, RSTRING_PTR(opt), RSTRING_LEN(opt));
@@ -81,11 +69,11 @@ rb_kakasi_kakasi(obj, opt, src)
 	dic_closed = 0;
     }
 
-    dst = new_euc_string("");
+    dst = rb_str_new2("");
     while (i < RSTRING_LEN(src)) {
       if (*(RSTRING_PTR(src) + i) != '\0') {
 	buf = kakasi_do((RSTRING_PTR(src) + i));
-	rb_str_concat(dst, new_euc_string(buf));
+	rb_str_concat(dst, rb_str_new2(buf));
 	if (*buf) free(buf);
 	while (*(RSTRING_PTR(src) + i) != '\0') {
 	  i++;
